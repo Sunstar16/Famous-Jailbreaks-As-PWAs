@@ -1,0 +1,153 @@
+<html><head>
+<title>Reproductor Disney Channel ES</title>
+
+<style type="text/css">
+html { height: 100%; }
+body { height: 100%; margin: 0px; padding: 0px; overflow: hidden; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;}
+#table_player { height: 100%; width: 100%; border-collapse: collapse; text-align: center; background-color:#000000; }
+#table_td { height: 100%; padding: 0px; vertical-align: middle; }
+#div_player { border: 0px solid yellow; }
+#html5_osx { border: 0px solid green; }
+#table_thumbnail { height: 100%; width: 100%; border-collapse: collapse; text-align: center; background-image: url('img/thumbnail.png'); background-size: 100%; background-repeat: no-repeat; background-attachment: fixed; background-position: center; }
+#table_ad { height: 100%; width: 100%; border-collapse: collapse; text-align: center; background-image: url('img/thumbnail.png'); background-size: 100%; background-repeat: no-repeat; background-attachment: fixed; background-position: center; }
+#div_countdown { height: 50px; width: 100px; top: 0px; right: 0px; z-index: 3; position: absolute; text-align: center; vertical-align: middle; line-height: 50px; font-family: helvetica; color: #FFFFFF; font-weight: bold;	-webkit-text-stroke-width: 1px black; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
+#div_adclose { height: 20px; width: 20px; top: 5px; right: 5px; z-index: 3; position: absolute; cursor: pointer; }
+
+a.lien:link
+{
+	color: #FFFFFF;
+	text-decoration: none;
+	font-family: helvetica;
+	font-weight: bold;
+	-webkit-text-stroke-width: 1px black;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+a.lien:visited
+{
+	color: #FFFFFF;
+	text-decoration: none;
+	font-family: helvetica;
+	font-weight: bold;
+	-webkit-text-stroke-width: 1px black;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+a.lien:hover
+{
+	color: #F7FD6E;
+	font-family: helvetica;
+	font-weight: bold;
+	-webkit-text-stroke-width: 1px black;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+a.lien:active
+{
+	color: #53A75F;
+	font-family: helvetica;
+	font-weight: bold;
+	-webkit-text-stroke-width: 1px black;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+</style>
+
+<script type="text/javascript">
+var s_Plugin = null;
+var s_StreamType = null;
+var s_StreamURL = 'http://179.49.163.34:45000/play/a00b/index.m3u8';
+var s_ThumbnailURL = 'img/thumbnail.png';
+var s_AutoPlay = 'auto';
+var s_Token = '';
+var i_Countdown = 25;
+
+include_lib('vdbhlsplayer/swfobject.min.js');
+include_lib('vdbhlsplayer/vdbhlsplayer.php?PHPSESSID=kaje5mn9922tp4hag38vvjvns7&cfg=J203sPiw1cdOHcwd@314179236');
+
+window.onload = function()
+{
+	if(document.getElementById('table_ad') == null)
+	{
+		init_player();
+		clear_player();
+	}
+	else
+	{
+		//setTimeout('play_countdown()', 1000);
+		clear_player();
+	}
+}
+
+window.onresize = function()
+{ resize_player(); }
+
+function init_player()
+{
+	try
+	{
+		if(s_Plugin == null)
+		{ set_player(); }
+		build_player();
+	}
+	catch(e)
+	{ setTimeout('init_player()', 1000); }
+}
+
+function clear_player()
+{
+	var ie_version = get_ie_version();
+	if(ie_version != 7 && ie_version != 8 && ie_version != 9)
+	{
+		exclude_lib('vdbhlsplayer/swfobject.min.js');
+		exclude_lib('vdbhlsplayer/vdbhlsplayer.php?PHPSESSID=kaje5mn9922tp4hag38vvjvns7&cfg=J203sPiw1cdOHcwd@314179236');
+	}
+}
+
+function include_lib(sURL)
+{
+	var oHead = document.getElementsByTagName('head')[0];
+	var oScript = document.createElement('script');
+	oScript.setAttribute('src', sURL);
+	oScript.setAttribute('type', 'text/javascript');
+	try
+	{ oHead.appendChild(oScript); }
+	catch(e)
+	{}
+}
+
+function exclude_lib(sURL)
+{
+	var aScripts = document.getElementsByTagName('script');
+	for (var i=aScripts.length; i>=0; i--)
+	{
+		if (aScripts[i] && aScripts[i].getAttribute('src') != null && aScripts[i].getAttribute('src').indexOf(sURL) != -1)
+		{ aScripts[i].parentNode.removeChild(aScripts[i]); }
+	}
+}
+
+function get_ie_version()
+{
+	var sUSerAgent = navigator.userAgent.toLowerCase();
+	return (sUSerAgent.indexOf('msie') != -1) ? parseInt(sUSerAgent.split('msie')[1]) : false;
+}
+
+//function play_now_with_ad()
+//{
+	//dDate = new Date;
+	//sDate = dDate.getTime();
+	//window.open('http://www.vodobox.com', sDate, 'height=480,width=800,top=0,left=0,scrollbars=1,resizable=yes');
+
+	//play_now();
+//}
+
+</script>
+</head>
+
+<body oncontextmenu="return false;">
+			<table id="table_player" style="background-image: url(&quot;img/thumbnail.png&quot;); background-size: 100%; background-position: center center; background-repeat: no-repeat no-repeat;">
+				<tbody><tr>
+					<td id="td_player">
+	    				<div id="div_player"><a href="http://179.49.163.34:45000/play/a00b/index.m3u8"><img src="img/play_button.png" border="0"></a></div>
+					</td>
+				</tr>
+			</tbody></table>
+		
+</body></html>
