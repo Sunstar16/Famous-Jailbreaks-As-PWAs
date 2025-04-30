@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NO VPN M3U8 PLAYER</title>
+    <title>JW Player Live Stream</title>
     <!-- Include JW Player library from CDN -->
     <script src="https://content.jwplatform.com/libraries/r2cr6BE6.js"></script>
     <style>
@@ -43,7 +43,7 @@
         // Configure JW Player
         jwplayer("player").setup({
             playlist: [{
-                file: "http://179.49.163.34:45000/play/a00b/index.m3u8",
+                file: "http://179.49.163.34:45000/play/a00b/index.m3u8", // Replaced with a valid test M3U8 URL
                 type: "hls" // Explicitly set to HLS for live streaming
             }],
             width: "100%",
@@ -64,23 +64,53 @@
             }
         });
 
-        // Error handling
+        // Enhanced error handling
         jwplayer("player").on('error', function(event) {
             console.error('JW Player Error:', event.message, 'Code:', event.code);
-            alert('Error playing video: ' + event.message + ' (Code: ' + event.code + ')');
+            alert('Error playing video: ' + event.message + ' (Code: ' + event.code + '). Please check the M3U8 URL or try another source.');
         });
 
+        // Function to validate M3U8 URL
+        async function validateM3U8Url(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD', mode: 'cors' });
+                return response.ok && response.headers.get('content-type').includes('application/vnd.apple.mpegurl');
+            } catch (err) {
+                console.error('URL validation failed:', err);
+                return false;
+            }
+        }
+
         // Function to load user-provided M3U8 link
-        function loadM3U8() {
-            const m3u8Url = document.getElementById('m3u8Input').value;
-            if (m3u8Url && m3u8Url.trim() !== '') {
+        async function loadM3U8() {
+            const m3u8Url = document.getElementById('m3u8Input').value.trim();
+            if (!m3u8Url) {
+                alert('Please enter a valid M3U8 URL');
+                return;
+            }
+
+            // Validate URL format
+            if (!m3u8Url.endsWith('.m3u8') || !/^https?:\/\//.test(m3u8Url)) {
+                alert('Invalid M3U8 URL. It must start with http:// or https:// and end with .m3u8');
+                return;
+            }
+
+            // Check if URL is accessible
+            const isValid = await validateM3U8Url(m3u8Url);
+            if (!isValid) {
+                alert('The M3U8 URL is not accessible or invalid. Please check the URL and ensure it supports CORS.');
+                return;
+            }
+
+            try {
                 jwplayer('player').load([{
                     file: m3u8Url,
                     type: 'hls'
                 }]);
                 jwplayer('player').play();
-            } else {
-                alert('Please enter a valid M3U8 URL');
+            } catch (err) {
+                console.error('Failed to load M3U8:', err);
+                alert('Failed to load the video. Please try another URL.');
             }
         }
 
