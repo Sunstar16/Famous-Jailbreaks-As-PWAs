@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3U8 Player</title>
+    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            width: 80%;
+            max-width: 800px;
+        }
+        #m3u8-url {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        #play-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #play-button:hover {
+            background-color: #0056b3;
+        }
+        .video-js {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>M3U8 Player</h1>
+        <input type="text" id="m3u8-url" placeholder="Enter M3U8 URL">
+        <button id="play-button">Play</button>
+        <video id="video-player" class="video-js vjs-default-skin" controls preload="auto"></video>
+    </div>
+
+    <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+    <script>
+        const player = videojs('video-player', {
+            fluid: true,
+            responsive: true,
+            playbackRates: [0.5, 1, 1.5, 2],
+            sources: [{
+                src: '',
+                type: 'application/x-mpegURL'
+            }]
+        });
+
+        const playButton = document.getElementById('play-button');
+        const urlInput = document.getElementById('m3u8-url');
+
+        playButton.addEventListener('click', () => {
+            const m3u8Url = urlInput.value.trim();
+            if (m3u8Url) {
+                player.src({
+                    src: m3u8Url,
+                    type: 'application/x-mpegURL'
+                });
+                player.play();
+            } else {
+                console.error('Please enter a valid M3U8 URL');
+            }
+        });
+    </script>
+    <!-- Added script to handle stream errors, M3U playlist parsing, and channel selection -->
+    <script>
+        // Function to determine the MIME type based on URL
+        function getMimeType(url) {
+            const extension = url.split('.').pop().toLowerCase();
+            switch (extension) {
+                case 'm3u8':
+                    return 'application/x-mpegURL';
+                case 'ts':
+                    return 'video/mp2t';
+                case 'mp4':
+                    return 'video/mp4';
+                default:
+                    // Default to HLS for unknown extensions, as many streams without .m3u8 are still HLS
+                    return 'application/x-mpegURL';
+            }
+        }
+
+        // Function to wait for the video to be ready
+        function waitForVideoReady(player) {
+            return new Promise((resolve, reject) => {
+                const timeout = setTimeout(() => {
+                    reject(new Error('Video readiness timeout'));
+                }, 10000); // 10-second timeout
+
+                player.one('loadedmetadata', () => {
+                    clearTimeout(timeout);
+                    resolve();
+                });
+
+                player.one('error', (e) => {
+                    clearTimeout(timeout);
+                    reject(new Error('Video error during readiness check'));
+                });
+            });
+        }
+
+        // Function to play a stream with consistent error handling
+        async function playStream(url, channelName = 'stream', channels = [], currentIndex = -1) {
+            try {
+                const mimeType = getMimeType(url);
+                const playUrl = url; // Direct stream access
+
+                console.log(`Attempting to play channel: ${channelName} (URL: ${url}) with MIME type: ${mimeType}`);
+
+                player.src({
+                    src: playUrl,
+                    type: mimeType
+                });
+                await waitForVideoReady(player); // Wait for the video to be ready
+                await player.play();
+            } catch (error) {
+                console.error(`Error playing ${channelName} with MIME type ${getMimeType(url)}:`, error);
+                if (error.message.includes('currentTime') || error.message.includes('non-finite') || error.message.includes('duration')) {
+                    console.error(`Video.js error: Failed to set duration or currentTime for ${channelName}.`);
+                }
+                if (error.message.includes('NetworkError') || error.message.includes('CORS')) {
+                    console.error(`CORS or network error for ${channelName}. This stream may require a server-side proxy to bypass CORS restrictions. Stream URL: ${url}`);
+                }
+                if (channels.length > 0 && currentIndex >= 0 && currentIndex + 1 < channels.length) {
+                    // Try the next channel
+                    const nextChannel = channels[currentIndex + 1];
+                    console.log(`Channel ${channelName} failed. Switching to next channel: ${nextChannel.name} (URL: ${nextChannel.url})`);
+                    playStream(nextChannel.url, nextChannel.name, channels, currentIndex + 1);
+                }
+            }
+        }
+
+        // Function to parse M3U playlist and extract channels with categories
+        async function parseM3uPlaylist(m3uUrl) {
+            try {
+                console.log('Fetching M3U playlist from:', m3uUrl);
+                // Attempt to fetch the M3U file directly
+                const response = await fetch(m3uUrl, { method: 'GET' });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch M3U playlist. Status: ${response.status} ${response.statusText}`);
+                }
+
+                const text = await response.text();
+                console.log('M3U playlist content:', text);
+                const lines = text.split('\n');
+                const channels = [];
+                let currentChannel = null;
+
+                for (let i = 0; i < lines.length; i++) {
+                    let line = lines[i].trim();
+                    if (line.startsWith('#EXTINF')) {
+                        // Extract channel name and group (category) from #EXTINF line
+                        currentChannel = {};
+                        const match = line.match(/tvg-name="([^"]*)"|,([^,]*)$/);
+                        currentChannel.name = match ? (match[1] || match[2]).trim() : 'Unnamed Channel';
+                        const groupMatch = line.match(/group-title="([^"]*)"/);
+                        currentChannel.group = groupMatch ? groupMatch[1] : 'Uncategorized';
+                    } else if (line && !line.startsWith('#') && currentChannel) {
+                        // This line is the stream URL
+                        if (line.match(/^(http|https):\/\//)) {
+                            currentChannel.url = line;
+                            channels.push(currentChannel);
+                            currentChannel = null; // Reset for the next channel
+                        }
+                    }
+                }
+
+                if (channels.length === 0) {
+                    throw new Error('No valid channels found in the M3U playlist.');
+                }
+                return channels;
+            } catch (error) {
+                console.error('Error parsing M3U playlist:', error.message);
+                throw error;
+            }
+        }
+
+        // Function to display channels grouped by categories
+        function displayChannels(channels) {
+            // Create a container for the channel list if it doesn't exist
+            let channelList = document.getElementById('channel-list');
+            if (!channelList) {
+                channelList = document.createElement('div');
+                channelList.id = 'channel-list';
+                channelList.style.marginTop = '20px';
+                channelList.style.maxHeight = '300px';
+                channelList.style.overflowY = 'auto';
+                channelList.style.width = '80%';
+                channelList.style.maxWidth = '800px';
+                channelList.style.backgroundColor = '#fff';
+                channelList.style.border = '1px solid #ddd';
+                channelList.style.borderRadius = '5px';
+                channelList.style.padding = '10px';
+                document.querySelector('.container').appendChild(channelList);
+            }
+
+            // Group channels by category
+            const groupedChannels = channels.reduce((acc, channel) => {
+                if (!acc[channel.group]) {
+                    acc[channel.group] = [];
+                }
+                acc[channel.group].push(channel);
+                return acc;
+            }, {});
+
+            // Clear existing content
+            channelList.innerHTML = '';
+
+            // Display channels grouped by category
+            for (const [group, groupChannels] of Object.entries(groupedChannels)) {
+                const groupDiv = document.createElement('div');
+                groupDiv.style.marginBottom = '10px';
+
+                const groupTitle = document.createElement('h3');
+                groupTitle.textContent = group;
+                groupTitle.style.cursor = 'pointer';
+                groupTitle.style.color = '#007BFF';
+                groupTitle.addEventListener('click', () => {
+                    channelUl.style.display = channelUl.style.display === 'none' ? 'block' : 'none';
+                });
+                groupDiv.appendChild(groupTitle);
+
+                const channelUl = document.createElement('ul');
+                channelUl.style.listStyle = 'none';
+                channelUl.style.paddingLeft = '20px';
+                channelUl.style.display = 'none'; // Initially collapsed
+
+                groupChannels.forEach((channel, index) => {
+                    const channelLi = document.createElement('li');
+                    channelLi.textContent = channel.name;
+                    channelLi.style.cursor = 'pointer';
+                    channelLi.style.padding = '5px 0';
+                    channelLi.style.color = '#333';
+                    channelLi.addEventListener('click', () => {
+                        // Use the same playback logic as for direct M3U8 streams, with fallback to next channel
+                        playStream(channel.url, channel.name, groupChannels, index);
+                    });
+                    channelUl.appendChild(channelLi);
+                });
+
+                groupDiv.appendChild(channelUl);
+                channelList.appendChild(groupDiv);
+            }
+        }
+
+        // Intercept errors and attempt to fix them
+        player.on('error', function(e) {
+            const error = player.error();
+            console.error('Error code:', error.code, 'Message:', error.message);
+            
+            // Log the error and do nothing, as error handling is managed in playStream
+        });
+
+        // Override the play button click event to handle M3U playlists
+        const originalPlayButtonListener = playButton.onclick; // Preserve original listener
+        playButton.onclick = null; // Remove the original listener to avoid conflicts
+        playButton.addEventListener('click', async () => {
+            const inputUrl = urlInput.value.trim();
+            if (inputUrl) {
+                // Check if the URL ends with .m3u
+                if (inputUrl.toLowerCase().endsWith('.m3u')) {
+                    try {
+                        console.log('Detected M3U playlist, parsing...');
+                        const channels = await parseM3uPlaylist(inputUrl);
+                        displayChannels(channels);
+                        // Optionally, play the first channel automatically using the same playback logic
+                        if (channels.length > 0) {
+                            playStream(channels[0].url, channels[0].name, channels, 0);
+                        }
+                    } catch (error) {
+                        console.error('Failed to parse M3U playlist:', error.message);
+                    }
+                } else {
+                    // For non-M3U URLs, use the same playback logic
+                    playStream(inputUrl);
+                }
+            } else {
+                console.error('Please enter a valid URL');
+            }
+        });
+    </script>
+</body>
+</html>
