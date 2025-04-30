@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NO VPN M3U8 PLAYER</title>
+    <!-- Include JW Player library from CDN -->
+    <script src="https://content.jwplatform.com/libraries/r2cr6BE6.js"></script>
+    <style>
+        /* Style the player container */
+        #player {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        /* Style the custom control buttons */
+        .custom-button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #ff0046;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .custom-button:hover {
+            background-color: #cc0038;
+        }
+    </style>
+</head>
+<body>
+    <!-- Container for JW Player -->
+    <div id="player"></div>
+    <!-- Input for M3U8 link -->
+    <input type="text" id="m3u8Input" placeholder="Enter M3U8 URL" style="padding: 10px; margin: 10px; width: 300px;">
+    <button class="custom-button" onclick="loadM3U8()">Load M3U8</button>
+    <!-- Custom control buttons -->
+    <button class="custom-button" onclick="jwplayer('player').play()">Play Video</button>
+    <button class="custom-button" onclick="jwplayer('player').pause()">Pause Video</button>
+    <button class="custom-button" onclick="toggleFullscreen()">Fullscreen</button>
+
+    <script>
+        // Configure JW Player
+        jwplayer("player").setup({
+            playlist: [{
+                file: "http://179.49.163.34:45000/play/a00b/index.m3u8",
+                type: "hls" // Explicitly set to HLS for live streaming
+            }],
+            width: "100%",
+            height: "400px",
+            autostart: false,
+            controls: true,
+            mute: false,
+            withCredentials: true, // Enable credentials for cross-origin requests
+            primary: "html5", // Prefer HTML5 over Flash
+            stretching: "uniform",
+            skin: {
+                controlbar: {
+                    background: "rgba(0,0,0,0.5)",
+                    icons: "rgba(255,255,255,0.8)",
+                    iconsActive: "#FFFFFF",
+                    text: "#FFFFFF"
+                }
+            }
+        });
+
+        // Error handling
+        jwplayer("player").on('error', function(event) {
+            console.error('JW Player Error:', event.message, 'Code:', event.code);
+            alert('Error playing video: ' + event.message + ' (Code: ' + event.code + ')');
+        });
+
+        // Function to load user-provided M3U8 link
+        function loadM3U8() {
+            const m3u8Url = document.getElementById('m3u8Input').value;
+            if (m3u8Url && m3u8Url.trim() !== '') {
+                jwplayer('player').load([{
+                    file: m3u8Url,
+                    type: 'hls'
+                }]);
+                jwplayer('player').play();
+            } else {
+                alert('Please enter a valid M3U8 URL');
+            }
+        }
+
+        // Fullscreen toggle function
+        function toggleFullscreen() {
+            const playerElement = document.getElementById('player');
+            if (!document.fullscreenElement) {
+                if (playerElement.requestFullscreen) {
+                    playerElement.requestFullscreen();
+                } else if (playerElement.webkitRequestFullscreen) { /* Safari */
+                    playerElement.webkitRequestFullscreen();
+                } else if (playerElement.msRequestFullscreen) { /* IE11 */
+                    playerElement.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Safari */
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { /* IE11 */
+                    document.msExitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
