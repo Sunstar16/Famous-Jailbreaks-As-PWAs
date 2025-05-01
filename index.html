@@ -4,96 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NO VPN M3U8 PLAYER</title>
-    <!-- Include JW Player library from CDN -->
-    <script src="https://content.jwplatform.com/libraries/r2cr6BE6.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Style the player container */
-        #player {
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+        input[type="text"] {
             width: 100%;
-            max-width: 800px;
-            margin: 20px auto;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
-        /* Style the custom control buttons */
-        .custom-button {
+        button {
             padding: 10px 20px;
-            margin: 10px;
-            background-color: #ff0046;
-            color: white;
             border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
             cursor: pointer;
-            font-size: 16px;
+            margin: 5px;
+            transition: background-color 0.3s;
         }
-        .custom-button:hover {
-            background-color: #cc0038;
+        button:hover {
+            background-color: #0056b3;
+        }
+        #videoPlayer {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Container for JW Player -->
-    <div id="player"></div>
-    <!-- Input for M3U8 link -->
-    <input type="text" id="m3u8Input" placeholder="Enter M3U8 URL (LATAM Disney Channel by default)" style="padding: 10px; margin: 10px; width: 300px;">
-    <button class="custom-button" onclick="loadM3U8()">Load M3U8</button>
-    <!-- Custom control buttons -->
-    <button class="custom-button" onclick="jwplayer('player').play()">Play Video</button>
-    <button class="custom-button" onclick="jwplayer('player').pause()">Pause Video</button>
-    
+    <div class="container">
+        <h1>NO VPN M3U8 PLAYER</h1>
+        <input type="text" id="m3u8Url" placeholder="Enter M3U8 URL">
+        <div class="button-container">
+            <button onclick="playVideo()"><i class="fas fa-play"></i> Play</button>
+            <button onclick="clearInput()"><i class="fas fa-eraser"></i> Clear</button>
+            <button onclick="goBack()" id="backButton" style="display: none;"><i class="fas fa-arrow-left"></i> Back</button>
+        </div>
+        <video id="videoPlayer" controls></video>
+        <p id="errorMessage" class="error"></p>
+    </div>
 
     <script>
-        // Configure JW Player
-        jwplayer("player").setup({
-            playlist: [{
-                file: "http://190.123.90.146:8000/play/a02a/index.m3u8",
-                type: "hls" // Explicitly set to HLS for live streaming
-            }],
-            width: "100%",
-            height: "400px",
-            autostart: false,
-            controls: true,
-            mute: false,
-            withCredentials: true, // Enable credentials for cross-origin requests
-            primary: "html5", // Prefer HTML5 over Flash
-            stretching: "uniform",
-            skin: {
-                controlbar: {
-                    background: "rgba(0,0,0,0.5)",
-                    icons: "rgba(255,255,255,0.8)",
-                    iconsActive: "#FFFFFF",
-                    text: "#FFFFFF"
-                }
-            }
-        });
+        function playVideo() {
+            const m3u8Url = document.getElementById('m3u8Url').value;
+            const videoPlayer = document.getElementById('videoPlayer');
+            const errorMessage = document.getElementById('errorMessage');
+            const backButton = document.getElementById('backButton');
 
-        // Error handling
-        jwplayer("player").on('error', function(event) {
-            console.error('JW Player Error:', event.message, 'Code:', event.code);
-            alert('Error playing video: ' + event.message + ' (Code: ' + event.code + ')');
-        });
+            if (m3u8Url) {
+                videoPlayer.src = m3u8Url;
+                videoPlayer.style.display = 'block';
+                backButton.style.display = 'inline-block';
+                errorMessage.style.display = 'none';
 
-        // Function to load user-provided M3U8 link
-        function loadM3U8() {
-            const m3u8Url = document.getElementById('m3u8Input').value;
-            if (m3u8Url && m3u8Url.trim() !== '') {
-                jwplayer('player').load([{
-                    file: m3u8Url,
-                    type: 'hls'
-                }]);
-                jwplayer('player').play();
+                videoPlayer.play().catch(error => {
+                    errorMessage.textContent = `Error playing video: ${error.message}`;
+                    errorMessage.style.display = 'block';
+                });
             } else {
-                alert('Please enter a valid M3U8 URL');
+                errorMessage.textContent = 'Please enter a valid M3U8 URL.';
+                errorMessage.style.display = 'block';
             }
         }
 
-        
-        // Add clipboard paste functionality to M3U8 input field
-        document.getElementById('m3u8Input').addEventListener('click', async function() {
-            try {
-                const text = await navigator.clipboard.readText();
-                this.value = text;
-            } catch (err) {
-                console.error('Failed to read clipboard contents: ', err);
+        function clearInput() {
+            document.getElementById('m3u8Url').value = '';
+            document.getElementById('videoPlayer').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('backButton').style.display = 'none';
+        }
+
+        function goBack() {
+            document.getElementById('videoPlayer').style.display = 'none';
+            document.getElementById('backButton').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+    </script>
+
+    <!-- Added script to proxy HTTP M3U8 streams over HTTPS -->
+    <script>
+        // Intercept the playVideo function to proxy HTTP M3U8 URLs
+        const originalPlayVideo = playVideo;
+        playVideo = function() {
+            const m3u8UrlInput = document.getElementById('m3u8Url');
+            let m3u8Url = m3u8UrlInput.value;
+
+            // Check if the URL is HTTP (not HTTPS)
+            if (m3u8Url.startsWith('http://')) {
+                // Proxy the HTTP URL through cors-anywhere to serve it over HTTPS
+                m3u8Url = 'https://cors-anywhere.herokuapp.com/' + m3u8Url;
+                m3u8UrlInput.value = m3u8Url; // Update the input field with the proxied URL
             }
-        });
+
+            // Call the original playVideo function with the updated URL
+            originalPlayVideo();
+        };
     </script>
 </body>
 </html>
