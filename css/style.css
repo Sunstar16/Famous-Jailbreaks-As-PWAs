@@ -1,0 +1,246 @@
+/*
+Theme Name: castr
+Theme URI:
+Author: Castr
+Author URI: 
+Description: Custom made WordPress theme.
+Version: 1.0.1
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: blog, agency, clean, business, company, castr, live streaming, restreaming, video hosting, ip camera, camera
+Text Domain: castr
+*/
+
+
+
+
+:root {
+  --color-primary-dark: #0049FF;
+  --color-primary-default: #1E5EFF;
+  --color-primary-light:#336DFF;
+
+  --color-primary-bg:#EEF2FC;
+  --color-primary-bg-light: #F7F8FD;
+
+  --color-greyscale-black-p1: #1F2B47;
+  --color-greyscale-black: #273452;
+  --color-greyscale-black-m1:#314064;
+  --color-greyscale-black-m2:#3D4D72;
+  --color-greyscale-black-m3: #6A799C;
+
+  --color-greyscale-grey-p1:#8C99B7;
+  --color-greyscale-grey:#A7B1C9;
+  --color-greyscale-grey-m1: #C7CFDF;
+
+  --color-greyscale-bg-light:#F9F9FA;
+  --color-greyscale-bg:#F3F4F5;
+  --color-greyscale-bg-dark: #EEEFF1;
+
+  --color-error-light:#EF6161;
+  --color-error:#EB4B4B;
+  --color-error-dark: #ED2727;
+  --color-error-bg: rgba(235, 75, 75, 0.06);
+
+  --color-success: #47B870;
+
+  --color-warning: #F68013;
+  --color-warning-bg: rgba(243, 143, 50, 0.08);
+
+  --tag-sponsored: #CC7A00;
+  --tag-sponsored-bg: rgba(238,143,0,0.12);
+  --tag-guest: #00AC6E;
+  --tag-guest-bg:rgba(0, 204, 131, 0.1);
+
+  --badge-purple: #9956CD;
+  --badge-orange: #E1911A;
+  --badge-turquoise: #4AB7DA;
+  --badge-offline:  rgba(255, 255, 255, 0.16);
+
+  --color-border: rgba(0, 31, 102, .17);
+  --color-separator: rgba(0, 12, 40, .08);
+
+  --fill-solid:rgba(0, 0, 0, .4);
+
+  --button-size-s: 0px 6px;
+  --button-size-m: 4px 12px;
+  --button-size-l: 6px 16px;
+  --font-size-regular: 14px;
+  --block-padding: 16px 20px;
+  --start-edge: -150px;
+  --end-edge: 150px;
+}
+.login-hd {
+  margin: 0 -40px;
+  padding: 16px 40px;
+  background-color: var(--color-greyscale-bg-light);
+  border-radius: 16px 16px 0 0;
+  border-bottom: 1px solid var(--color-separator);
+}
+.show-pass-wrapper {
+  position: relative;
+}
+.btn-transparent, .btn-transparent:visited {
+  background: transparent;
+  border-color: transparent;
+}
+
+/* TODO bad code temporerelyfix. Should be removed in v3 -> */ 
+  form#signin_form button.btn-transparent, form#signup_form button.btn-transparent {
+  background: transparent;
+  border-color: transparent; 
+}
+/* TODO <- */
+
+#show-pass {
+  position: absolute;
+  right: 0;
+  top: 3px;
+}
+
+.signup_wrapper,
+.signin_wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+.navbar-brand_signup {
+  position: relative;
+}
+.navbar-brand_signup .logo-icon-dot {
+  top: 19px;
+}
+.signup-box-inner .section-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 100vh;
+}
+.signup-box-inner .section-body>div {
+  flex: 0 0 100%;
+}
+.signup-box-inner .section_body_right {
+  min-height: 100%;
+}
+.section_body_right {
+  background-color: var(--color-primary-bg-light);
+  overflow: hidden;
+  min-height: 100%;
+}
+.up_testimonials {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -200px;
+  padding: 40px 0;
+}
+.up_testimonial {
+  margin: 10px;
+  position: relative;
+}
+.up_testimonial__box {
+  border-radius: 8px;
+  padding: var(--block-padding);
+  background-color: #fff;
+  box-shadow:  0px 10px 20px rgba(0, 0, 0, 0.05);
+  height: 100%;
+}
+.up_testimonial:nth-of-type(1) {
+  flex: 1 1 calc(28% - 20px);
+  width: calc(28% - 20px);
+  max-width: calc(28% - 20px);
+}
+.up_testimonial:nth-of-type(2) {
+  width: calc(33% - 20px);
+  max-width: calc(33% - 20px);
+}
+.up_testimonial:nth-of-type(3) {
+  width: calc(37% - 20px);
+  max-width: calc(37% - 20px);
+}
+.up_testimonial:nth-of-type(4) {
+  --start-edge: 150px;
+  --end-edge: -150px;
+  flex: 1 1 calc(25% - 20px);
+  width: calc(25% - 20px);
+  max-width: calc(25% - 20px);
+}
+.up_testimonial:nth-of-type(5) {
+  --start-edge: 150px;
+  --end-edge: -150px;
+  flex: 1 1 calc(41% - 20px);
+  width: calc(41% - 20px);
+  max-width: calc(41% - 20px);
+}
+.up_testimonial:nth-of-type(6) {
+  --start-edge: 150px;
+  --end-edge: -150px;
+  flex: 1 1 calc(33% - 20px);
+  width: calc(33% - 20px);
+  max-width: calc(33% - 20px);
+  position: relative;
+  margin: 10px;
+}
+.up_testimonial_move {
+  -webkit-animation: linear infinite;
+  animation: linear infinite;
+  -webkit-animation-name: horizontal_move;
+  animation-name: horizontal_move;
+  -webkit-animation-duration: 20s;
+  animation-duration: 20s;
+  transform: rotateZ(360deg);
+}
+.up_testimonials:hover .up_testimonial_move {
+  animation-play-state: paused;
+}
+@-webkit-keyframes horizontal_move {
+  0% {
+    left: var(--start-edge);
+  }
+  50% { 
+    left: var(--end-edge); 
+   }
+  100% {
+    left: var(--start-edge);     
+  }
+}
+.testimanial-main {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.testimonial-main__footer {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 13px;
+}
+.up_testimonial__text {
+  font-size: var(--font-size-regular);
+}
+.testimonial-main__stars {
+  color:#F68119;
+  border-left: 1px solid var(--color-separator);
+  padding: 5px;
+  margin-left: 5px;
+}
+.up_testimonial__author {
+  font-size: var(--font-size-regular);
+  font-weight: 500;
+  color: var(--color-primary-default);
+}
+.up_testimonial__title {
+  font-size: var(--font-size-regular);
+  color: var(--color-greyscale-grey-p1);
+}
+.up_logo {
+  padding: 20px;
+  border-top: 1px solid var(--color-separator);
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (min-width: 1200px) {
+  :root {
+    --font-size-regular: .85vw;
+    --block-padding: 1vw 1.25vw;
+  }
+}
