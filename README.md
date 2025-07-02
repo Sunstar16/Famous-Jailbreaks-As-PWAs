@@ -1,10 +1,11 @@
 # Jailbreak PWA Retrospective
 
 ## Project Overview
-The **Jailbreak PWA Retrospective** is an open-source project that recreates the user interfaces (UIs) of iconic iOS jailbreaking tools as Progressive Web Apps (PWAs), with each tool implemented in its own standalone HTML file for modularity and ease of maintenance. This repository lovingly rebuilds the nostalgic interfaces of tools like Chimera, Odyssey, Checkra1n, Taurine, Sileo, and way more, purely for educational and nostalgic purposes, without implementing any actual jailbreaking functionality or WebKit exploits. By leveraging web technologies within separate HTML files, this project delivers a visually authentic, immersive experience that makes users feel as if they are actually jailbreaking their devices, capturing the excitement and aesthetic of the golden era of iOS customization.
+The **Jailbreak PWA Retrospective** is an open-source project that recreates the user interfaces (UIs) of iconic iOS jailbreaking tools as Progressive Web Apps (PWAs), with each tool implemented in its own standalone HTML file for modularity and ease of maintenance. This repository lovingly rebuilds the nostalgic interfaces of tools like Chimera, Odyssey, Checkra1n, Taurine, Sileo, and way more, purely for educational and nostalgic purposes, without implementing any actual jailbreaking functionality or WebKit exploits. By leveraging web technologies within separate HTML files, this project delivers a visually authentic, immersive experience that makes users feel as if they are actually jailbreaking their devices, capturing the excitement and aesthetic of the golden era of iOS customization. Over time, updates will be pushed to each tool’s PWA to refine and enhance the nostalgic experience.
 
 ## Purpose and Goals
 - **Recreate the Jailbreaking Experience**: Faithfully recreate the UIs of iconic jailbreaking tools as individual PWAs to immerse users in the same visual and interactive experience as if they were actually jailbreaking their devices, complete with authentic animations, layouts, and workflows.
+- **Ongoing Updates**: Continuously push updates to each tool’s PWA over time to improve UI fidelity, add new features, and enhance the nostalgic experience based on community feedback and evolving web technologies.
 - **Preserve Jailbreak History**: Ensure the visual and interactive legacy of jailbreaking tools is accessible in a modern, web-based format for nostalgic enjoyment.
 - **Modular Design**: Implement each tool’s UI in a separate HTML file to simplify development, testing, and deployment, allowing independent updates and maintenance.
 - **Modernize User Experience**: Transform dated desktop and mobile interfaces into responsive, intuitive PWAs with modern design principles, while retaining their nostalgic charm.
@@ -76,7 +77,7 @@ Each tool’s UI is recreated as a standalone PWA in its own HTML file, embeddin
 4. **Contribute**: Check `CONTRIBUTING.md` for guidelines on adding new UI recreations, improving designs, or enhancing animations.
 
 ## Why This Project?
-- **Immersive Nostalgia**: Relive the thrill of jailbreaking through faithful UI recreations that feel like the real thing, powered by modern web technologies.
+- **Immersive Nostalgia**: Relive the thrill of jailbreaking through faithful UI recreations that feel like the real thing, powered by modern web technologies, with ongoing updates to enhance the experience.
 - **Educational Tool**: Learn about PWA development, single-file web apps, and the aesthetic history of iOS jailbreaking tools.
 - **Community-Driven**: Join a passionate community to preserve and expand the jailbreak legacy through nostalgic interfaces.
 
@@ -94,4 +95,4 @@ This project is licensed under the MIT License. See `LICENSE` for details.
 - The PWA community for inspiring modern web app development.
 - Contributors who help keep this nostalgic project alive.
 
-Join us in reimagining the visual history of iOS jailbreaking, one HTML file at a time!
+Join us in reimagining the visual history of iOS jailbreaking, one HTML file at a time, with continuous updates to keep the nostalgia alive!
