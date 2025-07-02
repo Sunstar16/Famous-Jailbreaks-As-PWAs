@@ -1,4 +1,4 @@
-# Jailbreak PWA Retrospective
+# Jailbreak PWA Retrospective (In development)
 
 ## Project Overview
 The **Jailbreak PWA Retrospective** is an open-source project that recreates the user interfaces (UIs) of iconic iOS jailbreaking tools as Progressive Web Apps (PWAs), with each tool implemented in its own standalone HTML file for modularity and ease of maintenance. This repository lovingly rebuilds the nostalgic interfaces of tools like Chimera, Odyssey, Checkra1n, Taurine, Sileo, and way more, purely for educational and nostalgic purposes, without implementing any actual jailbreaking functionality or WebKit exploits. By leveraging web technologies within separate HTML files, this project delivers a visually authentic, immersive experience that makes users feel as if they are actually jailbreaking their devices, capturing the excitement and aesthetic of the golden era of iOS customization. Over time, updates will be pushed to each tool’s PWA to refine and enhance the nostalgic experience.
