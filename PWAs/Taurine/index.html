@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff2e63">
+    <meta name="description" content="Taurine Jailbreak PWA">
+    <title>Taurine</title>
+    <style>
+        @font-face {
+            font-family: 'Empire Logo Font';
+            src: url('assets/fonts/empire-logofont.woff2') format('woff2'); /* Adjust path based on where you place the file */
+            font-weight: normal;
+            /* font-style: normal; */
+        }
+
+        /* Keyframes for the background rotation */
+        @keyframes rotateBackground {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); } /* Rotates clockwise */
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            overflow: hidden; /* Ensures content outside the body is clipped */
+            position: relative; /* Needed for z-index context relative to pseudo-element */
+            z-index: 1; /* Ensures body content is above the pseudo-background */
+            background: transparent; /* Ensure body's own background doesn't interfere */
+        }
+
+        /* Pseudo-element for the rotating background */
+        body::before {
+            content: '';
+            position: fixed; /* Fixed to viewport */
+            top: -50%; /* Position to cover more area for smooth rotation */
+            left: -50%;
+            width: 200%; /* Make it double the width/height of the viewport */
+            height: 200%;
+            /* MODIFIED: Red color is now the first color in the gradient */
+            background-image: linear-gradient(to top right, rgb(250, 50, 50), rgb(60, 60, 250));
+            z-index: -1; /* Place it behind the body content */
+            animation: rotateBackground 15s linear infinite; /* 15s duration, continuous linear rotation */
+            transform-origin: 50% 50%; /* Ensures rotation around its center */
+        }
+
+        .title {
+            font-family: 'Empire Logo Font', sans-serif;
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2; /* Ensure title stays above the menu/button */
+        }
+        .menu {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 9px;
+            width: 190px;
+            height: 204px;
+            text-align: left;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+            overflow-y: hidden;
+            position: relative;
+            z-index: 2;
+        }
+        .menu-item {
+            padding: 5px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1em;
+            transition: background 0.2s;
+        }
+
+        .separator {
+            border: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 5px 0;
+        }
+        .toggle {
+            width: 45px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 20px;
+            position: relative;
+            left: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .toggle.on {
+            background: #4caf50;
+        }
+        .toggle .switch {
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3.5px;
+            left: 5px;
+            transition: transform 0.2s, left 0.2s;
+        }
+        .toggle.on .switch {
+            transform: translateX(20px);
+            left: 2px;
+        }
+        .button {
+            margin-top: 20px;
+            padding: 15px 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+            transition: background 0.2s;
+            position: relative;
+            z-index: 2;
+        }
+        .button:hover {
+            background: (255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="title">TAURINE</div>
+    <div class="menu">
+        <div class="menu-item">
+            Enable Tweaks
+            <label class="toggle on">
+                <span class="switch"></span>
+            </label>
+        </div>
+        <hr class="separator">
+        <div class="menu-item">
+            Restore RootFS
+            <label class="toggle">
+                <span class="switch"></span>
+            </label>
+        </div>
+        <hr class="separator">
+        <div class="menu-item">Themes‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ></div>
+        <hr class="separator">
+        <div class="menu-item">Settings ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ></div>
+        <hr class="separator">
+        <div class="menu-item">Credits‎ ‎ ‎ ‎ ‎ ‎‎ ‎  ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎‎‎‎‎‎‎></div>
+    </div>
+    <button class="button">Jailbreak</button>
+
+    <script>
+        const toggles = document.querySelectorAll('.toggle');
+        toggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('on');
+            });
+        });
+    </script>
+</body>
+</html>
