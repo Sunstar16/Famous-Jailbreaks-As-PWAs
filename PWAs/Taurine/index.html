@@ -25,31 +25,32 @@
 
         body {
             margin: 0;
-            min-height: 100dvh; /* Ensures full viewport height, including status bar */
+            min-height: 100dvh; /* Ensures full viewport height */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-family: Arial, sans-serif;
             color: white;
-            overflow: hidden; /* Ensures content outside the body is clipped */
-            position: relative; /* Needed for z-index context relative to pseudo-element */
-            z-index: 1; /* Ensures body content is above the pseudo-background */
-            background: transparent; /* Ensure body's own background doesn't interfere */
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            background: transparent;
+            padding-top: env(safe-area-inset-top); /* Adjust for status bar height */
         }
 
         /* Pseudo-element for the rotating background */
         body::before {
             content: '';
-            position: fixed; /* Fixed to viewport */
-            top: -100%; /* Increased to ensure full coverage during rotation */
+            position: fixed;
+            top: -100%;
             left: -100%;
-            width: 300%; /* Increased to cover viewport fully */
+            width: 300%;
             height: 300%;
             background-image: linear-gradient(to top right, rgb(250, 50, 50), rgb(60, 60, 250));
-            z-index: -1; /* Place it behind the body content */
-            animation: rotateBackground 15s linear infinite; /* 15s duration, continuous linear rotation */
-            transform-origin: 50% 50%; /* Ensures rotation around its center */
+            z-index: -1;
+            animation: rotateBackground 15s linear infinite;
+            transform-origin: 50% 50%;
         }
 
         .title {
@@ -60,11 +61,11 @@
             letter-spacing: 0.5px;
             text-transform: uppercase;
             position: relative;
-            z-index: 2; /* Ensure title stays above the menu/button */
+            z-index: 2;
         }
         .menu {
-            background: rgba(255, 255, 255, 0.3); /* Fallback for browsers without backdrop-filter */
-            background: rgba(255, 255, 255, 0.1); /* Primary semi-transparent background */
+            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 9px;
@@ -132,7 +133,7 @@
             z-index: 2;
         }
         .button:hover {
-            background: rgba(255, 255, 255, 0.3); /* Fixed syntax error */
+            background: rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
