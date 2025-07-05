@@ -25,6 +25,7 @@
 
         body {
             margin: 0;
+            margin-top: -50px; /* Shift elements upwards by 50px */
             min-height: 100dvh; /* Full dynamic viewport height */
             display: flex;
             flex-direction: column;
@@ -40,7 +41,7 @@
             padding-top: env(safe-area-inset-top); /* For newer iOS */
         }
 
-        /* Pseudo-element for the rotating background */
+        /* Pseudo-element for the rotating gradient background */
         body::before {
             content: '';
             position: fixed;
