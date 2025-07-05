@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -25,7 +25,7 @@
 
         body {
             margin: 0;
-            min-height: 100dvh; /* Ensures full viewport height */
+            min-height: 100dvh; /* Full dynamic viewport height */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -36,17 +36,18 @@
             position: relative;
             z-index: 1;
             background: transparent;
-            padding-top: env(safe-area-inset-top); /* Adjust for status bar height */
+            padding-top: constant(safe-area-inset-top); /* For older iOS */
+            padding-top: env(safe-area-inset-top); /* For newer iOS */
         }
 
         /* Pseudo-element for the rotating background */
         body::before {
             content: '';
             position: fixed;
-            top: -100%;
-            left: -100%;
-            width: 300%;
-            height: 300%;
+            top: -150%; /* Extended further to ensure coverage */
+            left: -150%;
+            width: 400%; /* Increased to fully cover viewport */
+            height: 400%;
             background-image: linear-gradient(to top right, rgb(250, 50, 50), rgb(60, 60, 250));
             z-index: -1;
             animation: rotateBackground 15s linear infinite;
